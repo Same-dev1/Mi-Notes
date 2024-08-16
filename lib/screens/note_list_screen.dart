@@ -104,7 +104,7 @@ class NoteListScreenState extends State<NoteListScreen> {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(bottom: 60,top:8,left: 8,right: 8),
             sliver: SliverMasonryGrid.count(
               crossAxisCount: 2,
               mainAxisSpacing: 3,
@@ -140,14 +140,8 @@ class NoteListScreenState extends State<NoteListScreen> {
                               style: textStyle1,
                             ),
                             const SizedBox(height: 8.0),
-                            Text(
-                              note.content,
-                              maxLines: 8,
-                              style: textStyle2,
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
+                            Text(note.content, maxLines: 8, style: textStyle2),
+                            const SizedBox(height: 5),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -160,17 +154,13 @@ class NoteListScreenState extends State<NoteListScreen> {
                                         .headlineSmall,
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 2,
-                                ),
+                                const SizedBox(width: 2),
                                 TextButton(
                                   onPressed: () {
                                     noteProvider.deleteNote(note.id!);
                                   },
                                   child: const Text("Delete",
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                      )),
+                                      style: TextStyle(color: Colors.red)),
                                 ),
                               ],
                             ),

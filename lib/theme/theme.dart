@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 ThemeData lightMode = ThemeData(
   appBarTheme: AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.grey.shade200),
     color: Colors.grey.shade200,
   ),
   cardTheme: CardTheme(
@@ -11,6 +16,17 @@ ThemeData lightMode = ThemeData(
       borderSide: BorderSide.none,
       borderRadius: BorderRadius.circular(20),
     ),
+  ),
+  checkboxTheme: CheckboxThemeData(
+    overlayColor: const WidgetStatePropertyAll(
+      Colors.orange,
+    ),
+    fillColor: WidgetStatePropertyAll(Colors.grey.shade400),
+    side: BorderSide(color: Colors.grey.shade600, width: 2),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5),
+    ),
+    checkColor: const WidgetStatePropertyAll(Colors.white),
   ),
   textTheme: const TextTheme(
     headlineMedium: TextStyle(
@@ -31,8 +47,11 @@ ThemeData lightMode = ThemeData(
   ),
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll(
-        Colors.grey.shade200,
+      foregroundColor: const WidgetStatePropertyAll(
+        Colors.black,
+      ),
+      backgroundColor: const WidgetStatePropertyAll(
+        Colors.black12,
       ),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
@@ -46,8 +65,13 @@ ThemeData lightMode = ThemeData(
     elevation: 0,
     shape: OutlineInputBorder(
       borderSide: BorderSide.none,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(30),
     ),
+  ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    elevation: 0,
+    backgroundColor: Colors.grey.shade200,
+    selectedItemColor: Colors.black,
   ),
   brightness: Brightness.light,
   primaryColor: Colors.grey.shade200,
@@ -60,7 +84,14 @@ ThemeData lightMode = ThemeData(
 //DarkMode
 
 ThemeData darkMode = ThemeData(
-  appBarTheme: const AppBarTheme(color: Colors.black),
+  appBarTheme: const AppBarTheme(
+    color: Colors.black,
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.light,
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.black,
+    ),
+  ),
   cardTheme: CardTheme(
     color: Colors.white10,
     elevation: 0,
@@ -68,6 +99,14 @@ ThemeData darkMode = ThemeData(
       borderSide: BorderSide.none,
       borderRadius: BorderRadius.circular(20),
     ),
+  ),
+  checkboxTheme: CheckboxThemeData(
+    // fillColor: WidgetStatePropertyAll(Colors.grey.shade400),
+    side: BorderSide(color: Colors.grey.shade600, width: 2),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5),
+    ),
+    checkColor: const WidgetStatePropertyAll(Colors.black),
   ),
   textTheme: const TextTheme(
     headlineMedium: TextStyle(
@@ -105,6 +144,11 @@ ThemeData darkMode = ThemeData(
       borderSide: BorderSide.none,
       borderRadius: BorderRadius.circular(30),
     ),
+  ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    elevation: 0,
+    backgroundColor: Colors.black,
+    selectedItemColor: Colors.white,
   ),
   primaryColor: Colors.black,
   brightness: Brightness.dark,

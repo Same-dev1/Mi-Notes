@@ -32,17 +32,20 @@ class TaskListScreenState extends State<TaskListScreen> {
       builder: (context) {
         return TaskDialog(task: task);
       },
-    ).then(
-        (_) => _refreshTaskList()); // Refresh the list after dialog is closed
+    ).then((_) => _refreshTaskList()); // Refresh the list after dialog is closed
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final taskProvider = Provider.of<TaskProvider>(context);
-    final taskList = taskProvider.tasks.where((task) {
+    final taskList = taskProvider.tasks
+        .where((task) {
       return task.title.toLowerCase().contains(_searchQuery.toLowerCase());
-    }).toList();
+    })
+        .toList()
+        .reversed
+        .toList();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -63,7 +66,7 @@ class TaskListScreenState extends State<TaskListScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              titlePadding: const EdgeInsets.only(left: 18),
+              titlePadding: const EdgeInsets.only(left: 18, bottom: 10),
             ),
           ),
           SliverPersistentHeader(
@@ -72,8 +75,7 @@ class TaskListScreenState extends State<TaskListScreen> {
               minHeight: 60.0,
               maxHeight: 60.0,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
@@ -87,8 +89,7 @@ class TaskListScreenState extends State<TaskListScreen> {
                         borderSide: BorderSide.none,
                       ),
                       fillColor: theme.cardColor,
-                      prefixIcon:
-                          Icon(Icons.search, color: theme.iconTheme.color),
+                      prefixIcon: Icon(Icons.search, color: theme.iconTheme.color),
                     ),
                     onChanged: (query) {
                       setState(() {
@@ -102,73 +103,78 @@ class TaskListScreenState extends State<TaskListScreen> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final task = taskList[index];
-                return Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  child: Slidable(
-                    key: ValueKey(taskList[index].id),
-                    direction: Axis.horizontal,
-                    endActionPane: ActionPane(
-                      motion: const StretchMotion(),
-                      children: [
-                        SlidableAction(
-                          icon: Icons.delete,
-                          autoClose: true,
-                          backgroundColor: Colors.red,
-                          borderRadius: BorderRadius.circular(25),
-                          onPressed: (context) {
-                            taskProvider.deleteTask(task.id!);
-                          },
-                        )
-                      ],
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        _showTaskDialog(task: taskList[index]);
-                      },
-                      child: Card(
-                        child: ListTile(
-                          tileColor: theme.listTileTheme.tileColor,
-                          shape: OutlineInputBorder(
-                            borderSide: BorderSide.none,
+                  (context, index) {
+                if (index < taskList.length) {
+                  final task = taskList[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                    child: Slidable(
+                      key: ValueKey(taskList[index].id),
+                      direction: Axis.horizontal,
+                      endActionPane: ActionPane(
+                        motion: const StretchMotion(),
+                        children: [
+                          SlidableAction(
+                            icon: Icons.delete,
+                            autoClose: true,
+                            backgroundColor: Colors.red,
                             borderRadius: BorderRadius.circular(25),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 5),
-                          title: Text(
-                            taskList[index].title,
-                            maxLines: 1,
-                            style: TextStyle(
-                              decoration: taskList[index].isCompleted
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.orange,
-                            ),
-                          ),
-                          subtitle: Text(
-                            '${task.createdAt}',
-                            overflow: TextOverflow.clip,
-                            style: theme.textTheme.headlineSmall,
-                          ),
-                          trailing: Checkbox(
-                            value: taskList[index].isCompleted,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                task.isCompleted = value!;
-                              });
-                              taskProvider.updateTask(task);
+                            onPressed: (context) {
+                              taskProvider.deleteTask(task.id!);
                             },
+                          )
+                        ],
+                      ),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(25),
+                        onTap: () {
+                          _showTaskDialog(task: taskList[index]);
+                        },
+                        child: Card(
+                          child: ListTile(
+                            tileColor: theme.listTileTheme.tileColor,
+                            shape: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            title: Text(
+                              taskList[index].title,
+                              maxLines: 1,
+                              style: TextStyle(
+                                decoration: taskList[index].isCompleted
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.orange,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${task.createdAt}',
+                              overflow: TextOverflow.clip,
+                              style: theme.textTheme.headlineSmall,
+                            ),
+                            trailing: Checkbox(
+                              value: taskList[index].isCompleted,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  task.isCompleted = value!;
+                                });
+                                taskProvider.updateTask(task);
+                              },
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  return const SizedBox(height: 60); // Add spacing at the bottom
+                }
               },
-              childCount: taskList.length,
+              childCount: taskList.length + 1, // Add one to the child count for the SizedBox
             ),
           ),
         ],
@@ -207,8 +213,7 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => maxHeight;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return SizedBox.expand(child: child);
   }
 

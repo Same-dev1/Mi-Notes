@@ -32,7 +32,7 @@ class TaskDialogState extends State<TaskDialog> {
   }
 
   String getCurrentDateTime() {
-    return DateFormat('EEE, MMM d h:mm a').format(DateTime.now());
+    return DateFormat('EEE, d MMM  h:mm a').format(DateTime.now());
   }
 
   @override
@@ -41,14 +41,32 @@ class TaskDialogState extends State<TaskDialog> {
     final dateTextColor = theme.textTheme.headlineSmall!.color;
 
     return AlertDialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 10),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      actionsPadding: const EdgeInsets.symmetric(horizontal: 20),
       backgroundColor: theme.listTileTheme.tileColor,
-      title: Text(widget.task == null ? 'Create Task' : 'Edit Task'),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(widget.task == null ? 'Create Task' : 'Edit Task'),
+          const SizedBox(width: 110),
+          Text(
+            _createdAt,
+            style: TextStyle(
+              fontSize: 12,
+              color: dateTextColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
       content: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             TextFormField(
+              cursorColor: Colors.orange,
               autofocus: true,
               inputFormatters: [CapitalizeFirstLetterInputFormatter()],
               style: TextStyle(
@@ -58,25 +76,35 @@ class TaskDialogState extends State<TaskDialog> {
               ),
               initialValue: _title,
               decoration: InputDecoration(
-                labelText: 'Title',
-                labelStyle: TextStyle(
-                    color: Theme.of(context).textTheme.headlineSmall?.color),
-                border: InputBorder.none,
-                iconColor: Theme.of(context).textTheme.headlineSmall?.color,
+                errorBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    color: Colors.red,
+                    width: 0.1,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 1,
+                    color: theme.colorScheme.surface,
+                  ),
+                ),
+                hintText: 'Enter your task here',
+                hintStyle: TextStyle(color: dateTextColor, fontSize: 15),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    width: 0.1,
+                    color: theme.colorScheme.surface,
+                  ),
+                ),
               ),
               onSaved: (value) => _title = value!,
               validator: (value) =>
-                  value!.isEmpty ? 'Title cannot be empty' : null,
+                  value!.isEmpty ? "Can't create an empty task" : null,
             ),
             const SizedBox(height: 10),
-            Text(
-              _createdAt,
-              style: TextStyle(
-                fontSize: 14,
-                color: dateTextColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -118,10 +146,10 @@ class TaskDialogState extends State<TaskDialog> {
                       Navigator.of(context).pop(); // Close the dialog
                     }
                   },
-                  child: const Text(
+                  child: Text(
                     'Save',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: theme.colorScheme.surface,
                     ),
                   ),
                 ),

@@ -87,7 +87,6 @@ class NoteDetailScreenState extends State<NoteDetailScreen> {
               },
               icon: const Icon(Icons.done)),
         ],
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: SafeArea(
         child: Padding(
